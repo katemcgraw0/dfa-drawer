@@ -51,6 +51,12 @@ const DrawingCanvas = () => {
     console.log(`Clicked circle with ID ${circleId}`);
     // Implement your logic for circle click
   };
+  const handleCircleDragMove = (index, e) => {
+    const { x, y } = e.target.position();
+    const updatedCircles = [...circles];
+    updatedCircles[index] = { ...updatedCircles[index], x, y };
+    setCircles(updatedCircles);
+  };
 
   const setMode = (mode) => {
     // Set the corresponding mode and reset others
@@ -58,6 +64,7 @@ const DrawingCanvas = () => {
     setArrowMode(mode === 'arrow');
     setDeleteMode(mode === 'delete');
   };
+
 
   return (
     <div className="flex flex-col">
@@ -86,7 +93,7 @@ const DrawingCanvas = () => {
       <div className="border-4 border-black">
         <Stage width={600} height={400} ref={stageRef} onClick={handleStageClick}>
           <Layer>
-          {circles.map((circle) => (
+          {circles.map((circle, index) => (
               <React.Fragment key={circle.id}>
                 <Circle
                   x={circle.x}
@@ -97,7 +104,8 @@ const DrawingCanvas = () => {
                   stroke={circle.stroke}
                   strokeWidth={circle.srokeWidth}
                   onClick={() => handleCircleClick(circle.id)}
-                  draggable
+                  draggable={circleMode}
+                  onDragMove={(e) => handleCircleDragMove(index, e)}
                 />
                 <Text x={circle.x - 5} y={circle.y - 5} text={circle.label} />
               </React.Fragment>
