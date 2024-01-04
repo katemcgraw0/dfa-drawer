@@ -21,25 +21,32 @@ const DrawingCanvas = () => {
 
     // Check the active mode and perform corresponding actions
     if (circleMode) {
-      const newCircle = {
-        id: circles.length + 1,
-        x: pointerPos.x,
-        y: pointerPos.y,
-        radius: 30,
-        stroke: 'black',
-        strokeWidth: 2,
-        label: 'q' + circles.length,
-      };
+        const newCircle = {
+            id: circles.length + 1,
+            x: pointerPos.x,
+            y: pointerPos.y,
+            radius: 30,
+            stroke: 'black', // Set the border color
+            strokeWidth: '2', // Set the border thickness
+            fill: 'rgba(0, 0, 0, 0)', // Set transparent fill
+            label: 'q' + circles.length,
+          };
 
       setCircles((prevCircles) => [...prevCircles, newCircle]);
     } else if (arrowMode) {
       // Implement arrow mode logic
     } else if (deleteMode) {
-      // Implement delete mode logic
+        const clickedShape = e.target;
+        const newCircles = circles.filter((circle) => circle.id !== clickedShape.id());
+        setCircles(newCircles);
     }
   };
 
   const handleCircleClick = (circleId) => {
+    if (deleteMode) {
+        // Do nothing here, handling delete in handleStageClick
+        return;
+      }
     console.log(`Clicked circle with ID ${circleId}`);
     // Implement your logic for circle click
   };
@@ -85,6 +92,8 @@ const DrawingCanvas = () => {
                   y={circle.y}
                   radius={circle.radius}
                   fill={circle.fill}
+                  stroke={circle.stroke}
+                  strokeWidth={circle}
                   onClick={() => handleCircleClick(circle.id)}
                   draggable
                 />
