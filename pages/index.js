@@ -8,7 +8,7 @@ export default function Home() {
     <main
       className={`flex min-h-screen flex-col items-center `}
     >
-      <h1 className='text-lg mb-10'>DFA EDITOR</h1>
+      <h1 className='text-3xl mb-10 mt-10'>DFA EDITOR</h1>
    <DrawingCanvas></DrawingCanvas>
     </main>
   )

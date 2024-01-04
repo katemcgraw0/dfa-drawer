@@ -1,6 +1,6 @@
 // components/KonvaCanvas.js
 import React, { useRef, useState, useEffect } from 'react';
-import { Stage, Layer, Circle, Text } from 'react-konva';
+import { Stage, Layer, Circle, Text, Group } from 'react-konva';
 import { Button, ButtonGroup } from '@nextui-org/react';
 
 const DrawingCanvas = () => {
@@ -9,7 +9,7 @@ const DrawingCanvas = () => {
   const [circleMode, setCircleMode] = useState(true);
   const [arrowMode, setArrowMode] = useState(false);
   const [deleteMode, setDeleteMode] = useState(false);
-
+  const selectedCircleRef = useRef(null);
   useEffect(() => {
     const stage = stageRef.current;
     stage.container().style.cursor = 'pointer';
@@ -18,7 +18,7 @@ const DrawingCanvas = () => {
   const handleStageClick = (e) => {
     const stage = e.target.getStage();
     const pointerPos = stage.getPointerPosition();
-
+    const clickedShape = e.target;
     // Check the active mode and perform corresponding actions
     if (circleMode) {
         const newCircle = {
@@ -36,9 +36,10 @@ const DrawingCanvas = () => {
     } else if (arrowMode) {
       // Implement arrow mode logic
     } else if (deleteMode) {
-        const clickedShape = e.target;
-        const newCircles = circles.filter((circle) => circle.id !== clickedShape.id());
-        setCircles(newCircles);
+        if (clickedShape instanceof window.Konva.Circle) {
+            const newCircles = circles.filter((circle) => circle.id !== clickedShape.attrs.id);
+            setCircles(newCircles);
+          }
     }
   };
 
@@ -85,15 +86,16 @@ const DrawingCanvas = () => {
       <div className="border-4 border-black">
         <Stage width={600} height={400} ref={stageRef} onClick={handleStageClick}>
           <Layer>
-            {circles.map((circle) => (
+          {circles.map((circle) => (
               <React.Fragment key={circle.id}>
                 <Circle
                   x={circle.x}
                   y={circle.y}
+                  id={circle.id}
                   radius={circle.radius}
                   fill={circle.fill}
                   stroke={circle.stroke}
-                  strokeWidth={circle}
+                  strokeWidth={circle.srokeWidth}
                   onClick={() => handleCircleClick(circle.id)}
                   draggable
                 />
